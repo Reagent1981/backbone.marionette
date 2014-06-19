@@ -89,7 +89,7 @@ describe('collection view', function() {
     });
 
     it('should only call onBeforeRenderCollection once', function() {
-      expect(this.collectionView.onBeforeRenderCollection.callCount).to.equal(1);
+      expect(this.collectionView.onBeforeRenderCollection).to.have.been.calledOnce;
     });
 
     it('should append the html for each childView', function() {
@@ -152,6 +152,28 @@ describe('collection view', function() {
 
     it('should trigger "childview:render" for each item in the collection', function() {
       expect(this.childViewRender.callCount).to.equal(2);
+    });
+  });
+
+  describe('when rendering a collection view and accessing children via the DOM', function() {
+    beforeEach(function() {
+      this.CollectionView = this.MockCollectionView.extend({
+        onRenderCollection: function() {
+          this.onRenderHTML = this.el.innerHTML;
+        }
+      });
+
+      this.collection = new Backbone.Collection([{foo: 'bar'}, {foo: 'baz'}]);
+
+      this.collectionView = new this.CollectionView({
+        collection: this.collection
+      });
+
+      this.collectionView.render();
+    });
+
+    it('should find the expected number of childen', function() {
+      expect(this.collectionView.onRenderHTML).to.equal("<span>bar</span><span>baz</span>");
     });
   });
 
