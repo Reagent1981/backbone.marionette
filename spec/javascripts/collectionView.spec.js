@@ -21,7 +21,9 @@ describe('collection view', function() {
       onBeforeAddChild: function() {},
       onAddChild: function() {},
       onBeforeRemoveChild: function() {},
-      onRemoveChild: function() {}
+      onRemoveChild: function() {},
+      onRenderCollection: function() {},
+      onBeforeRenderCollection: function() {}
     });
   });
 
@@ -59,6 +61,8 @@ describe('collection view', function() {
       this.sinon.spy(this.collectionView, 'onBeforeAddChild');
       this.sinon.spy(this.collectionView, 'onAddChild');
       this.sinon.spy(this.collectionView, 'onBeforeRender');
+      this.sinon.spy(this.collectionView, 'onBeforeRenderCollection');
+      this.sinon.spy(this.collectionView, 'onRenderCollection');
       this.sinon.spy(this.collectionView, 'trigger');
       this.sinon.spy(this.collectionView, 'attachHtml');
       this.sinon.spy(this.collectionView.$el, 'append');
@@ -78,6 +82,14 @@ describe('collection view', function() {
 
     it('should add to render buffer once for each child', function() {
       expect(this.collectionView.attachHtml.callCount).to.equal(2);
+    });
+
+    it('should only call onRenderCollection once', function() {
+      expect(this.collectionView.onRenderCollection).to.have.been.calledOnce;
+    });
+
+    it('should only call onBeforeRenderCollection once', function() {
+      expect(this.collectionView.onBeforeRenderCollection.callCount).to.equal(1);
     });
 
     it('should append the html for each childView', function() {
